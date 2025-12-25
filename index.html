@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark" />
-  <title>Edad Humana del Perro</title>
-  <meta name="description" content="Un mini regalo: la edad del perro en “años humanos”, con estética dark + amarillo neón." />
+  <title>Edad humana de Pepe</title>
+  <meta name="description" content="Edad de Pepe en “años humanos”, con estética dark + amarillo neón." />
 
   <style>
     :root{
@@ -200,27 +200,6 @@
       line-height: 1.45;
     }
 
-    .footer{
-      margin-top: auto;
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 12px;
-      padding-top: 10px;
-      border-top: 1px dashed rgba(74,74,74,.6);
-    }
-
-    .footer .left,
-    .footer .right{
-      font-size: 12px;
-      opacity: .85;
-      line-height: 1.35;
-    }
-
-    .footer .right{
-      text-align: right;
-    }
-
     /* Animación de entrada suave */
     .fade-in{
       opacity: 0;
@@ -304,17 +283,13 @@
   <div class="bg-grid" aria-hidden="true"></div>
 
   <main class="wrap">
-    <section class="phone" role="region" aria-label="Tarjeta de edad humana del perro">
+    <section class="phone" role="region" aria-label="Tarjeta de edad humana de Pepe">
       <div class="inner">
 
         <header class="fade-in">
-          <h1 class="title">Edad humana del perrito</h1>
-          <p class="subtitle">
-            Un mini regalo: convertir la edad de un <b style="color: var(--primary); font-weight: 700;">teckel (salchicha) mini</b>
-            a su equivalente aproximado en “años humanos”.
-          </p>
+          <h1 class="title">Edad humana de Pepe</h1>
 
-          <div class="dogline" aria-label="Icono y descripción">
+          <div class="dogline" aria-label="Icono y explicación del modo HUD">
             <!-- Icono perro (simple, “outline”) -->
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M6.5 11.5c.7-2.7 3-4.5 5.8-4.5h2.2c2.6 0 4.7 1.7 5.2 4.1.2.9.7 1.6 1.5 2.2l.8.6-1.2 1.7-.9-.6c-.6-.4-1.1-.9-1.5-1.4V18c0 1.1-.9 2-2 2h-2.4l-.6-2H11l-.6 2H8c-1.1 0-2-.9-2-2v-2.2c0-.8-.3-1.6-.9-2.2l-.8-.8 1.5-1.4.7.8c.4.4.8.9 1 1.5Z"
@@ -322,7 +297,10 @@
               <path d="M9 10.2c-.2-1.1-1-2-2.2-2.2" stroke="#B0B0B0" stroke-width="1.4" stroke-linecap="round" opacity=".9"/>
               <path d="M14.8 12.2h.01" stroke="#B0B0B0" stroke-width="2.4" stroke-linecap="round" opacity=".9"/>
             </svg>
-            <div class="name">Modo “HUD”: cálculo en tiempo real según la fecha actual</div>
+
+            <div class="name">
+              Modo “HUD”: se recalcula automáticamente usando la fecha de hoy (y la fecha de nacimiento que selecciones).
+            </div>
           </div>
         </header>
 
@@ -338,7 +316,7 @@
 
           <div class="small-grid" aria-label="Detalles">
             <div class="pill">
-              <span>Edad real del perro</span>
+              <span>Edad real de Pepe</span>
               <span><b id="dogAgeReal">—</b></span>
             </div>
 
@@ -369,22 +347,8 @@
               <label for="birthInput" style="font-size: 12.5px; opacity: .85;">Nacimiento:</label>
               <input id="birthInput" type="date" />
             </div>
-            <p class="note" style="margin-top: 8px;">
-              Por defecto se usa: <b>hoy − 5 meses</b> (porque a fecha de hoy tiene 5 meses).
-            </p>
           </div>
         </section>
-
-        <footer class="footer fade-in delay-2" aria-label="Pie">
-          <div class="left">
-            <div style="opacity:.9;">Fuente:</div>
-            <div style="opacity:.85;">Heurística puppy→humano (tramo 0–24 meses) + regla simple después</div>
-          </div>
-          <div class="right">
-            <div style="color: var(--primary); font-family: var(--font-title); letter-spacing:.2px;">N.Geolitics</div>
-            <div id="todayLabel">—</div>
-          </div>
-        </footer>
 
       </div>
     </section>
@@ -392,7 +356,7 @@
 
   <script>
     // =========================
-    //  Ajustes “regalo”
+    //  Ajustes
     // =========================
     const BREED_LABEL = "Teckel (salchicha) mini";
     const DEFAULT_DOG_AGE_MONTHS_TODAY = 5; // a fecha de hoy tiene 5 meses
@@ -403,7 +367,6 @@
     function pad2(n){ return String(n).padStart(2, "0"); }
 
     function formatDateES(d){
-      // Formato: 25/12/2025
       return `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()}`;
     }
 
@@ -420,8 +383,7 @@
     }
 
     function diffMonthsAndDays(fromDate, toDate){
-      // Devuelve { months, days, totalDaysApprox }
-      // months: meses completos; days: días restantes
+      // Devuelve { months, days }
       let start = cloneDate(fromDate);
       let end = cloneDate(toDate);
       if (end < start) [start, end] = [end, start];
@@ -439,9 +401,7 @@
       const msPerDay = 24*60*60*1000;
       const days = Math.floor((end - start) / msPerDay);
 
-      // aproximación útil para meses fraccionales
-      const totalDaysApprox = Math.floor((end - fromDate) / msPerDay);
-      return { months, days, totalDaysApprox };
+      return { months, days };
     }
 
     // =========================
@@ -478,7 +438,6 @@
       const start = performance.now();
       function step(t){
         const p = Math.min(1, (t - start) / durationMs);
-        // easing suave
         const e = 1 - Math.pow(1 - p, 3);
         const v = from + (to - from) * e;
         el.textContent = v.toFixed(1).replace(".", ",");
@@ -494,7 +453,6 @@
     const humanAgeDetail = document.getElementById("humanAgeDetail");
     const dogAgeReal = document.getElementById("dogAgeReal");
     const birthDateLabel = document.getElementById("birthDateLabel");
-    const todayLabel = document.getElementById("todayLabel");
     const progressLabel = document.getElementById("progressLabel");
     const progressBar = document.getElementById("progressBar");
 
@@ -503,29 +461,29 @@
     const panel = document.getElementById("panel");
 
     function computeDefaultBirthDate(now){
-      // Por defecto: hoy - 5 meses
+      // Estimación: hoy - (meses que tiene hoy)
       return addMonths(now, -DEFAULT_DOG_AGE_MONTHS_TODAY);
     }
 
     function render(){
       const now = new Date();
-      todayLabel.textContent = `Hoy: ${formatDateES(now)}`;
+      const birth = birthInput.value
+        ? new Date(birthInput.value + "T00:00:00")
+        : computeDefaultBirthDate(now);
 
-      let birth = birthInput.value ? new Date(birthInput.value + "T00:00:00") : computeDefaultBirthDate(now);
-
-      // Edad exacta perro: meses completos + días
+      // Edad exacta: meses completos + días
       const md = diffMonthsAndDays(birth, now);
       const dogMonths = md.months;
       const dogDays = md.days;
 
-      // Para meses fraccionales: aproximación con días/30.4375
+      // Meses fraccionales aproximados (días/30.4375)
       const monthsFloat = dogMonths + (dogDays / 30.4375);
 
-      // Conversión a “años humanos”
+      // Conversión a años humanos
       const humanYears = dogMonthsToHumanYears(monthsFloat);
       const hm = humanYearsToY_M(humanYears);
 
-      // UI: texto principal + detalle
+      // UI: detalles
       dogAgeReal.textContent = `${dogMonths} meses y ${dogDays} días`;
       birthDateLabel.textContent = formatDateES(birth);
 
@@ -533,21 +491,19 @@
         ? `Equivalente aproximado: ${hm.years} años humanos.`
         : `Equivalente aproximado: ${hm.years} años y ${hm.months} meses humanos.`;
 
-      humanAgeDetail.textContent =
-        `${detail} (${BREED_LABEL})`;
+      humanAgeDetail.textContent = `${detail} (${BREED_LABEL})`;
 
       // Progreso hacia 12 meses
       const prog = Math.max(0, Math.min(1, monthsFloat / 12));
       progressLabel.textContent = `${Math.round(prog * 100)}%`;
       progressBar.style.width = `${Math.round(prog * 100)}%`;
 
-      // Contador animado (solo si aún está en “—” o si el cambio es notable)
+      // Contador animado
       const current = Number(String(humanAgeBig.textContent).replace(",", "."));
       if (!isFinite(current)){
         humanAgeBig.textContent = "0,0";
         animateNumber(humanAgeBig, 0, humanYears, 900);
       } else {
-        // actualización directa y limpia (sin parpadeo)
         humanAgeBig.textContent = humanYears.toFixed(1).replace(".", ",");
       }
     }
@@ -559,7 +515,6 @@
     });
 
     birthInput.addEventListener("change", () => {
-      // reanimar el contador en cada ajuste manual
       humanAgeBig.textContent = "0,0";
       render();
     });
@@ -570,8 +525,6 @@
       const birth = computeDefaultBirthDate(now);
       birthInput.value = `${birth.getFullYear()}-${pad2(birth.getMonth()+1)}-${pad2(birth.getDate())}`;
       render();
-
-      // Actualiza cada minuto (por si se deja abierto)
       setInterval(render, 60 * 1000);
     })();
   </script>
