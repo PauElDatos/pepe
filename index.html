@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>Edad Humana del Perro</title>
+  <meta name="description" content="Un mini regalo: la edad del perro en “años humanos”, con estética dark + amarillo neón." />
+
+  <style>
+    :root{
+      --bg: #252525;
+      --primary: #FEF702;
+      --text: #B0B0B0;
+      --grid: #4A4A4A;
+      --faint: #555555;
+
+      --radius: 18px;
+      --shadow: 0 18px 55px rgba(0,0,0,.45);
+
+      --font-title: Futura, "Trebuchet MS", Arial, sans-serif;
+      --font-text: Arial, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+
+    *{ box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-text);
+      overflow-x: hidden;
+    }
+
+    /* Fondo con rejilla sutil (estilo “template”) */
+    .bg-grid{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .35;
+      background:
+        repeating-linear-gradient(0deg,
+          rgba(74,74,74,.25) 0px,
+          rgba(74,74,74,.25) 1px,
+          transparent 1px,
+          transparent 28px),
+        repeating-linear-gradient(90deg,
+          rgba(74,74,74,.25) 0px,
+          rgba(74,74,74,.25) 1px,
+          transparent 1px,
+          transparent 28px);
+      mask-image: radial-gradient(circle at 50% 25%, rgba(0,0,0,1) 0%, rgba(0,0,0,.9) 40%, rgba(0,0,0,.25) 72%, rgba(0,0,0,0) 100%);
+    }
+
+    .wrap{
+      min-height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
+
+    /* Marco “9:16” centrado (móvil-friendly) */
+    .phone{
+      width: min(520px, 100%);
+      aspect-ratio: 9 / 16;
+      min-height: 82vh;
+      border-radius: 26px;
+      background: rgba(255,255,255,.02);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(176,176,176,.12);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .inner{
+      height: 100%;
+      padding: 22px 20px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header{
+      padding-top: 2px;
+    }
+
+    .title{
+      font-family: var(--font-title);
+      color: var(--primary);
+      font-size: 30px;
+      line-height: 1.06;
+      margin: 0 0 10px 0;
+      letter-spacing: .2px;
+    }
+
+    .subtitle{
+      margin: 0;
+      color: var(--text);
+      opacity: .95;
+      font-size: 14.5px;
+      line-height: 1.4;
+      max-width: 42ch;
+    }
+
+    .card{
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(176,176,176,.12);
+      border-radius: var(--radius);
+      padding: 16px 16px 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+
+    .hero{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .value-row{
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .big{
+      font-family: var(--font-title);
+      color: var(--primary);
+      font-size: 54px;
+      line-height: 1;
+      letter-spacing: .4px;
+    }
+
+    .unit{
+      font-family: var(--font-title);
+      color: var(--primary);
+      font-size: 20px;
+      opacity: .95;
+      transform: translateY(-3px);
+    }
+
+    .hint{
+      margin: 0;
+      font-size: 13.5px;
+      line-height: 1.4;
+      color: var(--text);
+      opacity: .95;
+    }
+
+    .small-grid{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .pill{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(176,176,176,.12);
+      background: rgba(255,255,255,.02);
+    }
+
+    .pill b{
+      color: rgba(254,247,2,.95);
+      font-weight: 700;
+    }
+
+    .pill span{
+      font-size: 13px;
+      opacity: .95;
+    }
+
+    .bar{
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(85,85,85,.65);
+      overflow: hidden;
+      border: 1px solid rgba(176,176,176,.12);
+    }
+    .bar > i{
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      border-radius: 999px;
+      box-shadow: 0 0 18px rgba(254,247,2,.25);
+      transition: width 900ms cubic-bezier(.2,.9,.2,1);
+    }
+
+    .note{
+      margin: 0;
+      font-size: 12.5px;
+      opacity: .8;
+      line-height: 1.45;
+    }
+
+    .footer{
+      margin-top: auto;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(74,74,74,.6);
+    }
+
+    .footer .left,
+    .footer .right{
+      font-size: 12px;
+      opacity: .85;
+      line-height: 1.35;
+    }
+
+    .footer .right{
+      text-align: right;
+    }
+
+    /* Animación de entrada suave */
+    .fade-in{
+      opacity: 0;
+      transform: translateY(8px);
+      animation: in .65s ease forwards;
+    }
+    .fade-in.delay-1{ animation-delay: .10s; }
+    .fade-in.delay-2{ animation-delay: .18s; }
+    .fade-in.delay-3{ animation-delay: .26s; }
+
+    @keyframes in{
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Icono simple (SVG) */
+    .dogline{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 4px;
+      opacity: .95;
+    }
+    .dogline svg{
+      width: 22px; height: 22px;
+      flex: 0 0 auto;
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,.35));
+    }
+    .dogline .name{
+      font-size: 13px;
+      opacity: .95;
+    }
+
+    /* Botón discreto (por si quieres editar fecha) */
+    .mini-btn{
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(176,176,176,.12);
+      background: rgba(255,255,255,.02);
+      color: var(--text);
+      cursor: pointer;
+      user-select: none;
+      font-size: 13px;
+    }
+    .mini-btn:hover{ border-color: rgba(254,247,2,.35); }
+    .panel{
+      margin-top: 10px;
+      display: none;
+    }
+    .panel.open{ display: block; }
+
+    .row{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    input[type="date"]{
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(176,176,176,.15);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 13px;
+      outline: none;
+    }
+    input[type="date"]:focus{ border-color: rgba(254,247,2,.35); }
+
+    @media (max-height: 680px){
+      .big{ font-size: 46px; }
+      .phone{ min-height: 78vh; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <section class="phone" role="region" aria-label="Tarjeta de edad humana del perro">
+      <div class="inner">
+
+        <header class="fade-in">
+          <h1 class="title">Edad humana del perrito</h1>
+          <p class="subtitle">
+            Un mini regalo: convertir la edad de un <b style="color: var(--primary); font-weight: 700;">teckel (salchicha) mini</b>
+            a su equivalente aproximado en “años humanos”.
+          </p>
+
+          <div class="dogline" aria-label="Icono y descripción">
+            <!-- Icono perro (simple, “outline”) -->
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6.5 11.5c.7-2.7 3-4.5 5.8-4.5h2.2c2.6 0 4.7 1.7 5.2 4.1.2.9.7 1.6 1.5 2.2l.8.6-1.2 1.7-.9-.6c-.6-.4-1.1-.9-1.5-1.4V18c0 1.1-.9 2-2 2h-2.4l-.6-2H11l-.6 2H8c-1.1 0-2-.9-2-2v-2.2c0-.8-.3-1.6-.9-2.2l-.8-.8 1.5-1.4.7.8c.4.4.8.9 1 1.5Z"
+                    stroke="#FEF702" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity=".95"/>
+              <path d="M9 10.2c-.2-1.1-1-2-2.2-2.2" stroke="#B0B0B0" stroke-width="1.4" stroke-linecap="round" opacity=".9"/>
+              <path d="M14.8 12.2h.01" stroke="#B0B0B0" stroke-width="2.4" stroke-linecap="round" opacity=".9"/>
+            </svg>
+            <div class="name">Modo “HUD”: cálculo en tiempo real según la fecha actual</div>
+          </div>
+        </header>
+
+        <section class="card hero fade-in delay-1" aria-live="polite">
+          <div class="value-row">
+            <div class="big" id="humanAgeBig">—</div>
+            <div class="unit" id="humanAgeUnit">años humanos</div>
+          </div>
+
+          <p class="hint" id="humanAgeDetail">
+            Calculando…
+          </p>
+
+          <div class="small-grid" aria-label="Detalles">
+            <div class="pill">
+              <span>Edad real del perro</span>
+              <span><b id="dogAgeReal">—</b></span>
+            </div>
+
+            <div class="pill">
+              <span>Fecha de nacimiento (estimada)</span>
+              <span><b id="birthDateLabel">—</b></span>
+            </div>
+
+            <div class="pill" style="flex-direction: column; align-items: stretch;">
+              <div style="display:flex; justify-content: space-between; gap: 10px;">
+                <span>Progreso hacia 1 año</span>
+                <span><b id="progressLabel">—</b></span>
+              </div>
+              <div class="bar" aria-hidden="true"><i id="progressBar"></i></div>
+            </div>
+          </div>
+
+          <p class="note" id="methodNote">
+            Nota: la equivalencia “años humanos” es una aproximación (el desarrollo del cachorro es muy rápido al principio).
+          </p>
+
+          <button class="mini-btn" id="togglePanel" type="button" aria-expanded="false" aria-controls="panel">
+            Ajustar fecha (opcional)
+          </button>
+
+          <div class="panel" id="panel">
+            <div class="row">
+              <label for="birthInput" style="font-size: 12.5px; opacity: .85;">Nacimiento:</label>
+              <input id="birthInput" type="date" />
+            </div>
+            <p class="note" style="margin-top: 8px;">
+              Por defecto se usa: <b>hoy − 5 meses</b> (porque a fecha de hoy tiene 5 meses).
+            </p>
+          </div>
+        </section>
+
+        <footer class="footer fade-in delay-2" aria-label="Pie">
+          <div class="left">
+            <div style="opacity:.9;">Fuente:</div>
+            <div style="opacity:.85;">Heurística puppy→humano (tramo 0–24 meses) + regla simple después</div>
+          </div>
+          <div class="right">
+            <div style="color: var(--primary); font-family: var(--font-title); letter-spacing:.2px;">N.Geolitics</div>
+            <div id="todayLabel">—</div>
+          </div>
+        </footer>
+
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // =========================
+    //  Ajustes “regalo”
+    // =========================
+    const BREED_LABEL = "Teckel (salchicha) mini";
+    const DEFAULT_DOG_AGE_MONTHS_TODAY = 5; // a fecha de hoy tiene 5 meses
+
+    // =========================
+    //  Helpers de fecha
+    // =========================
+    function pad2(n){ return String(n).padStart(2, "0"); }
+
+    function formatDateES(d){
+      // Formato: 25/12/2025
+      return `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()}`;
+    }
+
+    function cloneDate(d){ return new Date(d.getTime()); }
+
+    function addMonths(date, months){
+      const d = cloneDate(date);
+      const day = d.getDate();
+      d.setMonth(d.getMonth() + months);
+
+      // Ajuste por meses “cortos” (si al cambiar de mes se desborda)
+      if (d.getDate() < day) d.setDate(0);
+      return d;
+    }
+
+    function diffMonthsAndDays(fromDate, toDate){
+      // Devuelve { months, days, totalDaysApprox }
+      // months: meses completos; days: días restantes
+      let start = cloneDate(fromDate);
+      let end = cloneDate(toDate);
+      if (end < start) [start, end] = [end, start];
+
+      let months = 0;
+      while (true){
+        const next = addMonths(start, 1);
+        if (next <= end){
+          start = next;
+          months++;
+        } else {
+          break;
+        }
+      }
+      const msPerDay = 24*60*60*1000;
+      const days = Math.floor((end - start) / msPerDay);
+
+      // aproximación útil para meses fraccionales
+      const totalDaysApprox = Math.floor((end - fromDate) / msPerDay);
+      return { months, days, totalDaysApprox };
+    }
+
+    // =========================
+    //  Conversión a “años humanos”
+    //  (0–6m: 0→10; 6–12m: 10→15; 12–24m: 15→24; >24m: +4/año)
+    // =========================
+    function dogMonthsToHumanYears(monthsFloat){
+      const m = Math.max(0, monthsFloat);
+
+      if (m <= 6){
+        return m * (10/6);
+      }
+      if (m <= 12){
+        return 10 + (m - 6) * (5/6);
+      }
+      if (m <= 24){
+        return 15 + (m - 12) * (9/12);
+      }
+      return 24 + ((m - 24)/12) * 4;
+    }
+
+    function humanYearsToY_M(hYears){
+      const y = Math.floor(hYears);
+      let m = Math.round((hYears - y) * 12);
+      let yy = y;
+      if (m === 12){ yy += 1; m = 0; }
+      return { years: yy, months: m };
+    }
+
+    // =========================
+    //  UI (contador animado)
+    // =========================
+    function animateNumber(el, from, to, durationMs){
+      const start = performance.now();
+      function step(t){
+        const p = Math.min(1, (t - start) / durationMs);
+        // easing suave
+        const e = 1 - Math.pow(1 - p, 3);
+        const v = from + (to - from) * e;
+        el.textContent = v.toFixed(1).replace(".", ",");
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    // =========================
+    //  Render principal
+    // =========================
+    const humanAgeBig = document.getElementById("humanAgeBig");
+    const humanAgeDetail = document.getElementById("humanAgeDetail");
+    const dogAgeReal = document.getElementById("dogAgeReal");
+    const birthDateLabel = document.getElementById("birthDateLabel");
+    const todayLabel = document.getElementById("todayLabel");
+    const progressLabel = document.getElementById("progressLabel");
+    const progressBar = document.getElementById("progressBar");
+
+    const birthInput = document.getElementById("birthInput");
+    const togglePanel = document.getElementById("togglePanel");
+    const panel = document.getElementById("panel");
+
+    function computeDefaultBirthDate(now){
+      // Por defecto: hoy - 5 meses
+      return addMonths(now, -DEFAULT_DOG_AGE_MONTHS_TODAY);
+    }
+
+    function render(){
+      const now = new Date();
+      todayLabel.textContent = `Hoy: ${formatDateES(now)}`;
+
+      let birth = birthInput.value ? new Date(birthInput.value + "T00:00:00") : computeDefaultBirthDate(now);
+
+      // Edad exacta perro: meses completos + días
+      const md = diffMonthsAndDays(birth, now);
+      const dogMonths = md.months;
+      const dogDays = md.days;
+
+      // Para meses fraccionales: aproximación con días/30.4375
+      const monthsFloat = dogMonths + (dogDays / 30.4375);
+
+      // Conversión a “años humanos”
+      const humanYears = dogMonthsToHumanYears(monthsFloat);
+      const hm = humanYearsToY_M(humanYears);
+
+      // UI: texto principal + detalle
+      dogAgeReal.textContent = `${dogMonths} meses y ${dogDays} días`;
+      birthDateLabel.textContent = formatDateES(birth);
+
+      const detail = (hm.months === 0)
+        ? `Equivalente aproximado: ${hm.years} años humanos.`
+        : `Equivalente aproximado: ${hm.years} años y ${hm.months} meses humanos.`;
+
+      humanAgeDetail.textContent =
+        `${detail} (${BREED_LABEL})`;
+
+      // Progreso hacia 12 meses
+      const prog = Math.max(0, Math.min(1, monthsFloat / 12));
+      progressLabel.textContent = `${Math.round(prog * 100)}%`;
+      progressBar.style.width = `${Math.round(prog * 100)}%`;
+
+      // Contador animado (solo si aún está en “—” o si el cambio es notable)
+      const current = Number(String(humanAgeBig.textContent).replace(",", "."));
+      if (!isFinite(current)){
+        humanAgeBig.textContent = "0,0";
+        animateNumber(humanAgeBig, 0, humanYears, 900);
+      } else {
+        // actualización directa y limpia (sin parpadeo)
+        humanAgeBig.textContent = humanYears.toFixed(1).replace(".", ",");
+      }
+    }
+
+    // Panel opcional para cambiar nacimiento
+    togglePanel.addEventListener("click", () => {
+      const open = panel.classList.toggle("open");
+      togglePanel.setAttribute("aria-expanded", String(open));
+    });
+
+    birthInput.addEventListener("change", () => {
+      // reanimar el contador en cada ajuste manual
+      humanAgeBig.textContent = "0,0";
+      render();
+    });
+
+    // Inicialización
+    (function init(){
+      const now = new Date();
+      const birth = computeDefaultBirthDate(now);
+      birthInput.value = `${birth.getFullYear()}-${pad2(birth.getMonth()+1)}-${pad2(birth.getDate())}`;
+      render();
+
+      // Actualiza cada minuto (por si se deja abierto)
+      setInterval(render, 60 * 1000);
+    })();
+  </script>
+</body>
+</html>
