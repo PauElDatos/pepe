@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="color-scheme" content="dark" />
   <title>Edad humana de Pepe</title>
   <meta name="description" content="Edad de Pepe en “años humanos”, con estética dark + amarillo neón." />
@@ -24,15 +24,22 @@
 
     *{ box-sizing: border-box; }
     html, body { height: 100%; }
+
     body{
       margin: 0;
       background: var(--bg);
       color: var(--text);
       font-family: var(--font-text);
       overflow-x: hidden;
+
+      /* iOS safe areas */
+      padding-top: env(safe-area-inset-top);
+      padding-right: env(safe-area-inset-right);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
     }
 
-    /* Fondo con rejilla sutil (estilo “template”) */
+    /* Fondo con rejilla sutil */
     .bg-grid{
       position: fixed;
       inset: 0;
@@ -52,61 +59,49 @@
       mask-image: radial-gradient(circle at 50% 25%, rgba(0,0,0,1) 0%, rgba(0,0,0,.9) 40%, rgba(0,0,0,.25) 72%, rgba(0,0,0,0) 100%);
     }
 
+    /* Smartphone-first: pantalla completa */
     .wrap{
-      min-height: 100%;
-      display: grid;
-      place-items: center;
-      padding: 18px;
+      min-height: 100svh;
+      padding: 0;
+      display: block;
     }
 
-    /* Marco “9:16” centrado (móvil-friendly) */
     .phone{
-      width: min(520px, 100%);
-      aspect-ratio: 9 / 16;
-      min-height: 82vh;
-      border-radius: 26px;
+      width: 100%;
+      min-height: 100svh;
+      border-radius: 0;
       background: rgba(255,255,255,.02);
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(176,176,176,.12);
-      overflow: hidden;
+      border: 0;
+      box-shadow: none;
+      overflow: auto; /* si el móvil es pequeño, permite scroll dentro */
+      -webkit-overflow-scrolling: touch;
       position: relative;
     }
 
     .inner{
-      height: 100%;
-      padding: 22px 20px 18px;
+      min-height: 100%;
+      padding: 18px 16px 18px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
 
-    header{
-      padding-top: 2px;
-    }
+    header{ padding-top: 2px; }
 
     .title{
       font-family: var(--font-title);
       color: var(--primary);
-      font-size: 30px;
+      font-size: clamp(26px, 6.2vw, 34px);
       line-height: 1.06;
       margin: 0 0 10px 0;
       letter-spacing: .2px;
-    }
-
-    .subtitle{
-      margin: 0;
-      color: var(--text);
-      opacity: .95;
-      font-size: 14.5px;
-      line-height: 1.4;
-      max-width: 42ch;
     }
 
     .card{
       background: rgba(0,0,0,.18);
       border: 1px solid rgba(176,176,176,.12);
       border-radius: var(--radius);
-      padding: 16px 16px 14px;
+      padding: 14px 14px 12px;
       box-shadow: 0 10px 30px rgba(0,0,0,.25);
     }
 
@@ -127,7 +122,7 @@
     .big{
       font-family: var(--font-title);
       color: var(--primary);
-      font-size: 54px;
+      font-size: clamp(44px, 14vw, 64px);
       line-height: 1;
       letter-spacing: .4px;
     }
@@ -135,9 +130,10 @@
     .unit{
       font-family: var(--font-title);
       color: var(--primary);
-      font-size: 20px;
+      font-size: clamp(16px, 4.8vw, 22px);
       opacity: .95;
       transform: translateY(-3px);
+      white-space: nowrap;
     }
 
     .hint{
@@ -214,10 +210,10 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Icono simple (SVG) */
+    /* Icono + texto */
     .dogline{
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 10px;
       margin-top: 4px;
       opacity: .95;
@@ -226,19 +222,23 @@
       width: 22px; height: 22px;
       flex: 0 0 auto;
       filter: drop-shadow(0 8px 18px rgba(0,0,0,.35));
+      margin-top: 1px;
     }
     .dogline .name{
       font-size: 13px;
       opacity: .95;
+      line-height: 1.35;
     }
 
-    /* Botón discreto (por si quieres editar fecha) */
+    /* Botón (más cómodo en móvil) */
     .mini-btn{
       margin-top: 10px;
+      width: 100%;
+      justify-content: center;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 10px 12px;
+      padding: 12px 12px;
       border-radius: 14px;
       border: 1px solid rgba(176,176,176,.12);
       background: rgba(255,255,255,.02);
@@ -246,8 +246,10 @@
       cursor: pointer;
       user-select: none;
       font-size: 13px;
+      min-height: 44px; /* tamaño táctil */
     }
     .mini-btn:hover{ border-color: rgba(254,247,2,.35); }
+
     .panel{
       margin-top: 10px;
       display: none;
@@ -261,20 +263,53 @@
       flex-wrap: wrap;
       margin-top: 8px;
     }
+
     input[type="date"]{
+      width: 100%;
       background: rgba(0,0,0,.18);
       border: 1px solid rgba(176,176,176,.15);
       color: var(--text);
       border-radius: 12px;
-      padding: 10px 12px;
-      font-size: 13px;
+      padding: 12px 12px;
+      font-size: 14px;
       outline: none;
+      min-height: 44px;
     }
     input[type="date"]:focus{ border-color: rgba(254,247,2,.35); }
 
-    @media (max-height: 680px){
-      .big{ font-size: 46px; }
-      .phone{ min-height: 78vh; }
+    /* Desktop/tablet: vuelve al “marco 9:16” centrado */
+    @media (min-width: 740px){
+      .wrap{
+        min-height: 100%;
+        display: grid;
+        place-items: center;
+        padding: 18px;
+      }
+
+      .phone{
+        width: min(520px, 100%);
+        aspect-ratio: 9 / 16;
+        min-height: 82vh;
+        border-radius: 26px;
+        border: 1px solid rgba(176,176,176,.12);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .inner{
+        padding: 22px 20px 18px;
+        gap: 16px;
+      }
+
+      input[type="date"]{
+        width: auto;
+        min-width: 220px;
+      }
+
+      .mini-btn{
+        width: auto;
+        justify-content: flex-start;
+      }
     }
   </style>
 </head>
@@ -290,7 +325,6 @@
           <h1 class="title">Edad humana de Pepe</h1>
 
           <div class="dogline" aria-label="Icono y explicación del modo HUD">
-            <!-- Icono perro (simple, “outline”) -->
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M6.5 11.5c.7-2.7 3-4.5 5.8-4.5h2.2c2.6 0 4.7 1.7 5.2 4.1.2.9.7 1.6 1.5 2.2l.8.6-1.2 1.7-.9-.6c-.6-.4-1.1-.9-1.5-1.4V18c0 1.1-.9 2-2 2h-2.4l-.6-2H11l-.6 2H8c-1.1 0-2-.9-2-2v-2.2c0-.8-.3-1.6-.9-2.2l-.8-.8 1.5-1.4.7.8c.4.4.8.9 1 1.5Z"
                     stroke="#FEF702" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity=".95"/>
@@ -310,9 +344,7 @@
             <div class="unit" id="humanAgeUnit">años humanos</div>
           </div>
 
-          <p class="hint" id="humanAgeDetail">
-            Calculando…
-          </p>
+          <p class="hint" id="humanAgeDetail">Calculando…</p>
 
           <div class="small-grid" aria-label="Detalles">
             <div class="pill">
@@ -376,14 +408,11 @@
       const d = cloneDate(date);
       const day = d.getDate();
       d.setMonth(d.getMonth() + months);
-
-      // Ajuste por meses “cortos” (si al cambiar de mes se desborda)
-      if (d.getDate() < day) d.setDate(0);
+      if (d.getDate() < day) d.setDate(0); // ajuste por meses cortos
       return d;
     }
 
     function diffMonthsAndDays(fromDate, toDate){
-      // Devuelve { months, days }
       let start = cloneDate(fromDate);
       let end = cloneDate(toDate);
       if (end < start) [start, end] = [end, start];
@@ -394,9 +423,7 @@
         if (next <= end){
           start = next;
           months++;
-        } else {
-          break;
-        }
+        } else break;
       }
       const msPerDay = 24*60*60*1000;
       const days = Math.floor((end - start) / msPerDay);
@@ -411,15 +438,9 @@
     function dogMonthsToHumanYears(monthsFloat){
       const m = Math.max(0, monthsFloat);
 
-      if (m <= 6){
-        return m * (10/6);
-      }
-      if (m <= 12){
-        return 10 + (m - 6) * (5/6);
-      }
-      if (m <= 24){
-        return 15 + (m - 12) * (9/12);
-      }
+      if (m <= 6)  return m * (10/6);
+      if (m <= 12) return 10 + (m - 6) * (5/6);
+      if (m <= 24) return 15 + (m - 12) * (9/12);
       return 24 + ((m - 24)/12) * 4;
     }
 
@@ -461,7 +482,6 @@
     const panel = document.getElementById("panel");
 
     function computeDefaultBirthDate(now){
-      // Estimación: hoy - (meses que tiene hoy)
       return addMonths(now, -DEFAULT_DOG_AGE_MONTHS_TODAY);
     }
 
@@ -471,19 +491,14 @@
         ? new Date(birthInput.value + "T00:00:00")
         : computeDefaultBirthDate(now);
 
-      // Edad exacta: meses completos + días
       const md = diffMonthsAndDays(birth, now);
       const dogMonths = md.months;
       const dogDays = md.days;
 
-      // Meses fraccionales aproximados (días/30.4375)
       const monthsFloat = dogMonths + (dogDays / 30.4375);
-
-      // Conversión a años humanos
       const humanYears = dogMonthsToHumanYears(monthsFloat);
       const hm = humanYearsToY_M(humanYears);
 
-      // UI: detalles
       dogAgeReal.textContent = `${dogMonths} meses y ${dogDays} días`;
       birthDateLabel.textContent = formatDateES(birth);
 
@@ -493,12 +508,10 @@
 
       humanAgeDetail.textContent = `${detail} (${BREED_LABEL})`;
 
-      // Progreso hacia 12 meses
       const prog = Math.max(0, Math.min(1, monthsFloat / 12));
       progressLabel.textContent = `${Math.round(prog * 100)}%`;
       progressBar.style.width = `${Math.round(prog * 100)}%`;
 
-      // Contador animado
       const current = Number(String(humanAgeBig.textContent).replace(",", "."));
       if (!isFinite(current)){
         humanAgeBig.textContent = "0,0";
@@ -508,7 +521,6 @@
       }
     }
 
-    // Panel opcional para cambiar nacimiento
     togglePanel.addEventListener("click", () => {
       const open = panel.classList.toggle("open");
       togglePanel.setAttribute("aria-expanded", String(open));
@@ -519,7 +531,6 @@
       render();
     });
 
-    // Inicialización
     (function init(){
       const now = new Date();
       const birth = computeDefaultBirthDate(now);
